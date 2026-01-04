@@ -1,4 +1,3 @@
-
 /**
  * API Utilities Template
  *
@@ -40,9 +39,7 @@ const BEARER_TOKEN_KEY = "your-app_bearer_token";
  * Check if backend is properly configured
  */
 export const isBackendConfigured = (): boolean => {
-  const configured = !!BACKEND_URL && BACKEND_URL.length > 0;
-  console.log("[API] Backend configured:", configured, "URL:", BACKEND_URL);
-  return configured;
+  return !!BACKEND_URL && BACKEND_URL.length > 0;
 };
 
 /**
@@ -78,17 +75,11 @@ export const apiCall = async <T = any>(
   options?: RequestInit
 ): Promise<T> => {
   if (!isBackendConfigured()) {
-    console.error("[API] Backend URL not configured!");
     throw new Error("Backend URL not configured. Please rebuild the app.");
   }
 
   const url = `${BACKEND_URL}${endpoint}`;
-  const method = options?.method || "GET";
-  
-  console.log(`[API] ${method} ${url}`);
-  if (options?.body) {
-    console.log("[API] Request body:", options.body);
-  }
+  console.log("[API] Calling:", url, options?.method || "GET");
 
   try {
     const response = await fetch(url, {
@@ -99,39 +90,17 @@ export const apiCall = async <T = any>(
       },
     });
 
-    console.log(`[API] Response status: ${response.status} ${response.statusText}`);
-
-    // Try to get response text first
-    const text = await response.text();
-    console.log("[API] Response text:", text);
-
     if (!response.ok) {
-      console.error(`[API] Error response: ${response.status} - ${text}`);
-      throw new Error(`API error: ${response.status} - ${text || response.statusText}`);
+      const text = await response.text();
+      console.error("[API] Error response:", response.status, text);
+      throw new Error(`API error: ${response.status} - ${text}`);
     }
 
-    // Parse JSON if we have content
-    if (text) {
-      try {
-        const data = JSON.parse(text);
-        console.log("[API] Parsed response:", data);
-        return data;
-      } catch (parseError) {
-        console.error("[API] Failed to parse JSON:", parseError);
-        throw new Error("Invalid JSON response from server");
-      }
-    }
-
-    // Return empty object if no content
-    console.log("[API] Empty response, returning empty object");
-    return {} as T;
-  } catch (error: any) {
+    const data = await response.json();
+    console.log("[API] Success:", data);
+    return data;
+  } catch (error) {
     console.error("[API] Request failed:", error);
-    console.error("[API] Error details:", {
-      message: error.message,
-      name: error.name,
-      stack: error.stack
-    });
     throw error;
   }
 };

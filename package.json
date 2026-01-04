@@ -1,6 +1,5 @@
-
 {
-  "name": "intentional",
+  "name": "Natively",
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
@@ -9,11 +8,7 @@
     "ios": "EXPO_NO_TELEMETRY=1 expo start --ios",
     "web": "EXPO_NO_TELEMETRY=1 expo start --web",
     "build:web": "expo export -p web && npx workbox generateSW workbox-config.js",
-    "build:android": "eas build --platform android",
-    "build:ios": "eas build --platform ios",
-    "build:all": "eas build --platform all",
-    "submit:android": "eas submit --platform android",
-    "submit:ios": "eas submit --platform ios",
+    "build:android": "expo prebuild -p android",
     "lint": "eslint ."
   },
   "dependencies": {

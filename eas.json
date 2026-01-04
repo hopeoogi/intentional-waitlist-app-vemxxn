@@ -1,8 +1,4 @@
-
 {
-  "cli": {
-    "version": ">= 14.0.0"
-  },
   "build": {
     "development": {
       "developmentClient": true,
@@ -11,29 +7,10 @@
     },
     "preview": {
       "distribution": "internal",
-      "autoIncrement": true,
-      "ios": {
-        "simulator": false
-      }
+      "autoIncrement": true
     },
     "production": {
-      "autoIncrement": true,
-      "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "YOUR_PRODUCTION_BACKEND_URL"
-      }
-    }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "appleId": "YOUR_APPLE_ID",
-        "ascAppId": "YOUR_ASC_APP_ID",
-        "appleTeamId": "YOUR_TEAM_ID"
-      },
-      "android": {
-        "serviceAccountKeyPath": "./google-service-account.json",
-        "track": "internal"
-      }
+      "autoIncrement": true
     }
   }
 }

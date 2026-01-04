@@ -1,56 +1,111 @@
 
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ImageBackground, Dimensions, TouchableOpacity, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  Platform,
+} from "react-native";
 import { useRouter } from "expo-router";
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, withDelay } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withDelay,
+  withSequence,
+} from "react-native-reanimated";
+import { colors } from "@/styles/commonStyles";
 
 const { width, height } = Dimensions.get("window");
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  const opacity = useSharedValue(0);
-  const translateY = useSharedValue(50);
+  const titleOpacity = useSharedValue(0);
+  const titleScale = useSharedValue(0.8);
 
   useEffect(() => {
-    opacity.value = withDelay(300, withSpring(1));
-    translateY.value = withDelay(300, withSpring(0));
-    
-    // Auto-navigate to signin after 2 seconds
+    // Animate title entrance
+    titleOpacity.value = withDelay(500, withSpring(1, { damping: 15 }));
+    titleScale.value = withDelay(
+      500,
+      withSpring(1, { damping: 12, stiffness: 100 })
+    );
+
+    // Auto-navigate to sign-in after 3 seconds
     const timer = setTimeout(() => {
       router.push("/signin");
-    }, 2000);
-    
+    }, 3000);
+
     return () => clearTimeout(timer);
   }, []);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
+  const titleAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: titleOpacity.value,
+      transform: [{ scale: titleScale.value }],
+    };
+  });
 
   return (
-    <ImageBackground
-      source={{ uri: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800" }}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <LinearGradient colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.6)"]} style={styles.gradient}>
-        <SafeAreaView style={styles.container}>
-          <Animated.View style={[styles.content, animatedStyle]}>
+    <View style={styles.container}>
+      <ImageBackground
+        source={{
+          uri: "https://prod-finalquest-user-projects-storage-bucket-aws.s3.amazonaws.com/user-projects/279d2210-f350-46be-b3af-b605dbd18c3a/assets/images/086511e3-6332-40be-b62b-6d12808da7a4.jpeg?AWSAccessKeyId=AKIAVRUVRKQJC5DISQ4Q&Signature=%2BIFoHAM0A0SxHOPFLRjvNgykFxo%3D&Expires=1767628940",
+        }}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <LinearGradient
+          colors={["rgba(26, 22, 37, 0.7)", "rgba(26, 22, 37, 0.9)"]}
+          style={styles.gradient}
+        >
+          <Animated.View style={[styles.titleContainer, titleAnimatedStyle]}>
             <Text style={styles.title}>Intentional</Text>
+            <View style={styles.underline} />
           </Animated.View>
-        </SafeAreaView>
-      </LinearGradient>
-    </ImageBackground>
+        </LinearGradient>
+      </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: { flex: 1, width, height },
-  gradient: { flex: 1 },
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  content: { alignItems: "center" },
-  title: { fontSize: 56, fontWeight: "700", color: "#fff", letterSpacing: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  backgroundImage: {
+    flex: 1,
+    width: width,
+    height: height,
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleContainer: {
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 64,
+    fontWeight: "300",
+    color: colors.text,
+    letterSpacing: 4,
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
+  },
+  underline: {
+    width: 120,
+    height: 2,
+    backgroundColor: colors.accent,
+    marginTop: 16,
+    borderRadius: 1,
+  },
 });
