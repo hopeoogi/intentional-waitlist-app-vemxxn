@@ -1,5 +1,9 @@
 
+import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "@/styles/commonStyles";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect } from "react";
+import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -8,8 +12,6 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -17,22 +19,17 @@ import Animated, {
   withDelay,
   withSequence,
 } from "react-native-reanimated";
-import { colors } from "@/styles/commonStyles";
 
 const { width, height } = Dimensions.get("window");
 
 export default function WelcomeScreen() {
+  const fadeAnim = useSharedValue(0);
+  const scaleAnim = useSharedValue(0.8);
   const router = useRouter();
-  const titleOpacity = useSharedValue(0);
-  const titleScale = useSharedValue(0.8);
 
   useEffect(() => {
-    // Animate title entrance
-    titleOpacity.value = withDelay(500, withSpring(1, { damping: 15 }));
-    titleScale.value = withDelay(
-      500,
-      withSpring(1, { damping: 12, stiffness: 100 })
-    );
+    fadeAnim.value = withDelay(300, withSpring(1));
+    scaleAnim.value = withDelay(300, withSpring(1));
 
     // Auto-navigate to sign-in after 3 seconds
     const timer = setTimeout(() => {
@@ -42,30 +39,27 @@ export default function WelcomeScreen() {
     return () => clearTimeout(timer);
   }, []);
 
-  const titleAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: titleOpacity.value,
-      transform: [{ scale: titleScale.value }],
-    };
-  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: fadeAnim.value,
+    transform: [{ scale: scaleAnim.value }],
+  }));
 
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={{
-          uri: "https://prod-finalquest-user-projects-storage-bucket-aws.s3.amazonaws.com/user-projects/279d2210-f350-46be-b3af-b605dbd18c3a/assets/images/086511e3-6332-40be-b62b-6d12808da7a4.jpeg?AWSAccessKeyId=AKIAVRUVRKQJC5DISQ4Q&Signature=%2BIFoHAM0A0SxHOPFLRjvNgykFxo%3D&Expires=1767628940",
-        }}
-        style={styles.backgroundImage}
+        source={require("@/assets/images/natively-dark.png")}
+        style={styles.background}
         resizeMode="cover"
       >
         <LinearGradient
-          colors={["rgba(26, 22, 37, 0.7)", "rgba(26, 22, 37, 0.9)"]}
+          colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0.8)"]}
           style={styles.gradient}
         >
-          <Animated.View style={[styles.titleContainer, titleAnimatedStyle]}>
-            <Text style={styles.title}>Intentional</Text>
-            <View style={styles.underline} />
-          </Animated.View>
+          <SafeAreaView style={styles.safeArea}>
+            <Animated.View style={[styles.content, animatedStyle]}>
+              <Text style={styles.title}>Intentional</Text>
+            </Animated.View>
+          </SafeAreaView>
         </LinearGradient>
       </ImageBackground>
     </View>
@@ -75,37 +69,36 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
-  backgroundImage: {
+  background: {
     flex: 1,
-    width: width,
-    height: height,
+    width: "100%",
+    height: "100%",
   },
   gradient: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  content: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  titleContainer: {
-    alignItems: "center",
-  },
   title: {
-    fontSize: 64,
-    fontWeight: "300",
-    color: colors.text,
-    letterSpacing: 4,
-    fontFamily: Platform.select({
-      ios: "Georgia",
-      android: "serif",
-      default: "serif",
+    fontSize: 56,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    letterSpacing: 1,
+    textAlign: "center",
+    ...Platform.select({
+      ios: {
+        fontFamily: "System",
+      },
+      android: {
+        fontFamily: "sans-serif-light",
+      },
     }),
-  },
-  underline: {
-    width: 120,
-    height: 2,
-    backgroundColor: colors.accent,
-    marginTop: 16,
-    borderRadius: 1,
   },
 });

@@ -1,35 +1,24 @@
 
-import { StatusBar } from "expo-status-bar";
+import "react-native-reanimated";
+import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { useColorScheme } from "react-native";
-import React, { useEffect } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SplashScreen from "expo-splash-screen";
 import { SystemBars } from "react-native-edge-to-edge";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useColorScheme } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
   Theme,
   ThemeProvider,
 } from "@react-navigation/native";
-import "react-native-reanimated";
-import { colors } from "@/styles/commonStyles";
-import { BACKEND_URL } from "@/utils/api";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 
-const IntentionalTheme: Theme = {
-  ...DarkTheme,
-  colors: {
-    ...DarkTheme.colors,
-    primary: colors.primary,
-    background: colors.background,
-    card: colors.card,
-    text: colors.text,
-    border: colors.inputBorder,
-    notification: colors.accent,
-  },
+export const unstable_settings = {
+  initialRouteName: "index",
 };
 
 export default function RootLayout() {
@@ -39,9 +28,6 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // Log backend URL on app startup for debugging
-    console.log("[App] Backend URL configured:", BACKEND_URL);
-    
     if (loaded) {
       SplashScreen.hideAsync();
     }
@@ -51,23 +37,32 @@ export default function RootLayout() {
     return null;
   }
 
+  const CustomDarkTheme: Theme = {
+    ...DarkTheme,
+    colors: {
+      primary: "rgb(10, 132, 255)",
+      background: "rgb(1, 1, 1)",
+      card: "rgb(28, 28, 30)",
+      text: "rgb(255, 255, 255)",
+      border: "rgb(44, 44, 46)",
+      notification: "rgb(255, 69, 58)",
+    },
+  };
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider value={IntentionalTheme}>
-        <SystemBars style="light" />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: colors.background },
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="signin" />
-          <Stack.Screen name="application" />
-          <Stack.Screen name="confirmation" />
-        </Stack>
-        <StatusBar style="light" />
+    <>
+      <StatusBar style="light" animated />
+      <ThemeProvider value={CustomDarkTheme}>
+        <GestureHandlerRootView>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="signin" />
+            <Stack.Screen name="application" />
+            <Stack.Screen name="confirmation" />
+          </Stack>
+          <SystemBars style="light" />
+        </GestureHandlerRootView>
       </ThemeProvider>
-    </GestureHandlerRootView>
+    </>
   );
 }
