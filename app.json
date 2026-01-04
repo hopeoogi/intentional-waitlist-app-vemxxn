@@ -1,34 +1,35 @@
+
 {
   "expo": {
-    "name": "Intentional Waitlist",
-    "slug": "Intentional Waitlist",
+    "name": "Intentional",
+    "slug": "intentional",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/natively-dark.png",
+    "icon": "./assets/images/f03496a1-9a34-4437-93f3-131ede024e31.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/natively-dark.png",
+      "image": "./assets/images/f03496a1-9a34-4437-93f3-131ede024e31.png",
       "resizeMode": "contain",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#1a1a1a"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.Natively",
+      "bundleIdentifier": "com.intentional.dating",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/natively-dark.png",
-        "backgroundColor": "#000000"
+        "foregroundImage": "./assets/images/f03496a1-9a34-4437-93f3-131ede024e31.png",
+        "backgroundColor": "#1a1a1a"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.Natively"
+      "package": "com.intentional.dating"
     },
     "web": {
-      "favicon": "./assets/images/final_quest_240x240.png",
+      "favicon": "./assets/images/f03496a1-9a34-4437-93f3-131ede024e31.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -36,14 +37,15 @@
       "expo-router",
       "expo-web-browser"
     ],
-    "scheme": "natively",
+    "scheme": "intentional",
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "router": {},
-      "backendUrl": "https://rc2c3sbhagv7dydqfqvaamtrxe9xcp68.app.specular.dev"
+      "eas": {
+        "projectId": "YOUR_PROJECT_ID"
+      }
     }
-  },
-  "scheme": "Intentional Waitlist"
+  }
 }
