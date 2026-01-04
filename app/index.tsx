@@ -1,61 +1,42 @@
 
-import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "@/styles/commonStyles";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect } from "react";
+import { View, Text, StyleSheet, ImageBackground, Dimensions, TouchableOpacity, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  Dimensions,
-  Platform,
-} from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withDelay,
-  withSequence,
-} from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, withDelay } from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
 
 export default function WelcomeScreen() {
-  const fadeAnim = useSharedValue(0);
-  const scaleAnim = useSharedValue(0.8);
   const router = useRouter();
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(50);
 
   useEffect(() => {
-    fadeAnim.value = withDelay(300, withSpring(1));
-    scaleAnim.value = withDelay(300, withSpring(1));
-
-    // Auto-navigate to signin after 2.5 seconds
+    opacity.value = withDelay(300, withSpring(1));
+    translateY.value = withDelay(300, withSpring(0));
+    
+    // Auto-navigate to signin after 2 seconds
     const timer = setTimeout(() => {
       router.push("/signin");
-    }, 2500);
-
+    }, 2000);
+    
     return () => clearTimeout(timer);
   }, []);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: fadeAnim.value,
-      transform: [{ scale: scaleAnim.value }],
-    };
-  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
 
   return (
     <ImageBackground
-      source={require("@/assets/images/e1226bff-6dd4-4e54-9d6d-d117c560edab.jpeg")}
+      source={{ uri: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800" }}
       style={styles.background}
       resizeMode="cover"
     >
-      <LinearGradient
-        colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0.8)"]}
-        style={styles.gradient}
-      >
+      <LinearGradient colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.6)"]} style={styles.gradient}>
         <SafeAreaView style={styles.container}>
           <Animated.View style={[styles.content, animatedStyle]}>
             <Text style={styles.title}>Intentional</Text>
@@ -67,27 +48,9 @@ export default function WelcomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  gradient: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  content: {
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 56,
-    fontWeight: "700",
-    color: "#FFFFFF",
-    letterSpacing: 1,
-    textAlign: "center",
-  },
+  background: { flex: 1, width, height },
+  gradient: { flex: 1 },
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  content: { alignItems: "center" },
+  title: { fontSize: 56, fontWeight: "700", color: "#fff", letterSpacing: 1 },
 });
