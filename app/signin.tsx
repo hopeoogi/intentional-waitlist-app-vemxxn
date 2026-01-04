@@ -1,5 +1,15 @@
 
+import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withDelay,
+} from "react-native-reanimated";
+import { colors } from "@/styles/commonStyles";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect } from "react";
+import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -10,183 +20,111 @@ import {
   Image,
   Platform,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withDelay,
-} from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "@/styles/commonStyles";
 
 const { width, height } = Dimensions.get("window");
 
 export default function SignInScreen() {
+  const fadeAnim = useSharedValue(0);
+  const slideAnim = useSharedValue(50);
   const router = useRouter();
-  const logoOpacity = useSharedValue(0);
-  const logoTranslateY = useSharedValue(-30);
-  const descriptionOpacity = useSharedValue(0);
-  const buttonOpacity = useSharedValue(0);
-  const buttonScale = useSharedValue(0.9);
 
   useEffect(() => {
-    // Staggered animations
-    logoOpacity.value = withDelay(200, withSpring(1));
-    logoTranslateY.value = withDelay(200, withSpring(0));
-    descriptionOpacity.value = withDelay(600, withSpring(1));
-    buttonOpacity.value = withDelay(1000, withSpring(1));
-    buttonScale.value = withDelay(1000, withSpring(1));
+    fadeAnim.value = withDelay(200, withSpring(1));
+    slideAnim.value = withDelay(200, withSpring(0));
   }, []);
 
-  const logoAnimatedStyle = useAnimatedStyle(() => {
+  const animatedStyle = useAnimatedStyle(() => {
     return {
-      opacity: logoOpacity.value,
-      transform: [{ translateY: logoTranslateY.value }],
-    };
-  });
-
-  const descriptionAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: descriptionOpacity.value,
-    };
-  });
-
-  const buttonAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: buttonOpacity.value,
-      transform: [{ scale: buttonScale.value }],
+      opacity: fadeAnim.value,
+      transform: [{ translateY: slideAnim.value }],
     };
   });
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={{
-          uri: "https://prod-finalquest-user-projects-storage-bucket-aws.s3.amazonaws.com/user-projects/279d2210-f350-46be-b3af-b605dbd18c3a/assets/images/086511e3-6332-40be-b62b-6d12808da7a4.jpeg?AWSAccessKeyId=AKIAVRUVRKQJC5DISQ4Q&Signature=%2BIFoHAM0A0SxHOPFLRjvNgykFxo%3D&Expires=1767628940",
-        }}
-        style={styles.backgroundImage}
-        resizeMode="cover"
+    <ImageBackground
+      source={require("@/assets/images/e1226bff-6dd4-4e54-9d6d-d117c560edab.jpeg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <LinearGradient
+        colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0.8)"]}
+        style={styles.gradient}
       >
-        <LinearGradient
-          colors={[
-            "rgba(26, 22, 37, 0.85)",
-            "rgba(26, 22, 37, 0.92)",
-            "rgba(26, 22, 37, 0.95)",
-          ]}
-          style={styles.gradient}
-        >
-          <SafeAreaView style={styles.safeArea}>
-            <View style={styles.content}>
-              {/* Logo */}
-              <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
-                <Image
-                  source={{
-                    uri: "https://prod-finalquest-user-projects-storage-bucket-aws.s3.amazonaws.com/user-projects/279d2210-f350-46be-b3af-b605dbd18c3a/assets/images/ebb0bc4b-69db-4cd2-ba3b-f6f379ffa8d8.png?AWSAccessKeyId=AKIAVRUVRKQJC5DISQ4Q&Signature=qjA2%2BR%2B%2Fi6maJpuZ682EUulNwp4%3D&Expires=1767628940",
-                  }}
-                  style={styles.logo}
-                  resizeMode="contain"
-                />
-              </Animated.View>
+        <SafeAreaView style={styles.container}>
+          <Animated.View style={[styles.content, animatedStyle]}>
+            <Image
+              source={require("@/assets/images/677320a7-e086-48ce-9958-b00cffc6ca94.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            
+            <Text style={styles.description}>
+              Join our exclusive community of Intentional connections. No likes or swipes anymore, no more being ghosted, only genuine relationships.
+            </Text>
 
-              {/* Description */}
-              <Animated.View
-                style={[styles.descriptionContainer, descriptionAnimatedStyle]}
-              >
-                <Text style={styles.description}>
-                  Join our exclusive community of Intentional connections. No
-                  likes or swipes anymore, no more being ghosted, only genuine
-                  relationships.
-                </Text>
-              </Animated.View>
-
-              {/* Button */}
-              <Animated.View style={buttonAnimatedStyle}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => router.push("/application")}
-                  activeOpacity={0.8}
-                >
-                  <LinearGradient
-                    colors={[colors.primary, colors.accent]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={styles.buttonGradient}
-                  >
-                    <Text style={styles.buttonText}>Join our Community</Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-              </Animated.View>
-            </View>
-          </SafeAreaView>
-        </LinearGradient>
-      </ImageBackground>
-    </View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("/application")}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.buttonText}>Join our Community</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </SafeAreaView>
+      </LinearGradient>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: colors.background,
-  },
-  backgroundImage: {
-    flex: 1,
-    width: width,
-    height: height,
+    width: "100%",
+    height: "100%",
   },
   gradient: {
     flex: 1,
   },
-  safeArea: {
-    flex: 1,
-  },
-  content: {
+  container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 32,
+    paddingHorizontal: 30,
   },
-  logoContainer: {
-    marginBottom: 60,
+  content: {
     alignItems: "center",
+    width: "100%",
   },
   logo: {
     width: 120,
     height: 120,
-    borderRadius: 60,
-  },
-  descriptionContainer: {
-    marginBottom: 60,
+    marginBottom: 40,
   },
   description: {
     fontSize: 18,
-    lineHeight: 28,
-    color: colors.textSecondary,
+    color: "#FFFFFF",
     textAlign: "center",
-    fontWeight: "300",
-    letterSpacing: 0.5,
+    marginBottom: 50,
+    lineHeight: 26,
+    paddingHorizontal: 10,
   },
   button: {
-    width: width - 64,
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 16,
+    paddingHorizontal: 40,
     borderRadius: 30,
-    overflow: "hidden",
-    elevation: 8,
-    shadowColor: colors.primary,
+    width: "100%",
+    maxWidth: 300,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-  },
-  buttonGradient: {
-    paddingVertical: 18,
-    paddingHorizontal: 32,
-    alignItems: "center",
+    elevation: 5,
   },
   buttonText: {
+    color: "#000000",
     fontSize: 18,
-    fontWeight: "600",
-    color: colors.text,
-    letterSpacing: 1,
+    fontWeight: "700",
+    textAlign: "center",
   },
 });
