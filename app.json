@@ -1,8 +1,7 @@
-
 {
   "expo": {
-    "name": "Intentional",
-    "slug": "intentional-dating",
+    "name": "Intentional Waitlist",
+    "slug": "Intentional Waitlist",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/natively-dark.png",
@@ -11,11 +10,11 @@
     "splash": {
       "image": "./assets/images/natively-dark.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1a1a2e"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.intentional.dating",
+      "bundleIdentifier": "com.anonymous.Natively",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -23,10 +22,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/natively-dark.png",
-        "backgroundColor": "#1a1a2e"
+        "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.intentional.dating"
+      "package": "com.anonymous.Natively"
     },
     "web": {
       "favicon": "./assets/images/final_quest_240x240.png",
@@ -37,7 +36,7 @@
       "expo-router",
       "expo-web-browser"
     ],
-    "scheme": "intentional",
+    "scheme": "natively",
     "experiments": {
       "typedRoutes": true
     },
@@ -45,5 +44,6 @@
       "router": {},
       "backendUrl": "https://rc2c3sbhagv7dydqfqvaamtrxe9xcp68.app.specular.dev"
     }
-  }
+  },
+  "scheme": "Intentional Waitlist"
 }
